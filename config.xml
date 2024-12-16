@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module>
+
+    <name>pickupscheduler</name>
+
+    <displayName><![CDATA[Pickup Scheduler]]></displayName>
+
+    <description><![CDATA[Este módulo permite a los clientes seleccionar un tramo horario y un día disponibles para recoger su pedido en la tienda. Ofrece una interfaz intuitiva para gestionar los horarios de recogida, asegurando una mejor organización y planificación tanto para la tienda como para los clientes.]]></description>
+
+    <version>1.0.0</version>
+
+    <author>Oscar Periche</author>
+
+    <ps_versions_compliancy>
+
+        <min>8.2</min>
+
+        <max>8.2</max>
+
+    </ps_versions_compliancy>
+
+</module>
+

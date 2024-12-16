@@ -1,0 +1,39 @@
+#calendar {
+    margin-top: 20px;
+}
+
+.page-order table td, .page-order table th {
+    padding: 0;
+}
+
+.fc-time-grid-event {
+    cursor: pointer;
+}
+
+.fc-time-grid-event:hover,
+.fc-time-grid-event.event-selected {
+    background: #CE1126 !important;
+}
+
+#hiddenDiv label[for="calendar"] {
+    font-weight: 700;
+}
+
+#hiddenDiv p {
+    font-size: .875rem;
+    color: #232323;
+    padding-bottom: 20px;
+}
+
+#timeSelectedInfo {
+    display: none;
+    background: #fff;
+    border: rgb(79, 33, 112) 3px solid;
+    color: #232323;
+    padding: .9375rem;
+    margin: 20px 0;
+}
+
+.expires-info {
+    display: none;
+}

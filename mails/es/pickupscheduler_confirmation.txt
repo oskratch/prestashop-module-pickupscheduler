@@ -1,0 +1,8 @@
+Hola,
+¡Gracias por tu compra! Te informamos de los detalles para recoger tu pedido:
+
+Día: {date}
+Franja horaria: {start_time} - {end_time}
+ID del pedido: {order_id}
+
+Nos vemos el día de tu recogida. ¡Disfruta de tu pedido!
