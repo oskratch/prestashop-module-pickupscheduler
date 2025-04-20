@@ -9,11 +9,11 @@ var autoSelectEventId = window.autoSelectEventId;
 var autoSelectEventDate = autoSelectEventDate;
 var autoSelectEventExpires = window.autoSelectEventExpires;
 
-var radioButtons = $('input[name="delivery_option[2]"]');
+var radioButtons = $('.delivery-options input[type="radio"][name^="delivery_option"]');
 var hiddenDiv = $('#hiddenDiv');
 var continueButton = $('form#js-delivery button.continue');
 
-$(document).ready(function() {
+$(function() {
     radioButtons.each(function() {
         if ($(this).val().split(',')[0] === pickupSchedulerCarrierId && $(this).is(':checked')) {
             hiddenDiv.show();

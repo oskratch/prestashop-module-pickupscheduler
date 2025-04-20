@@ -46,7 +46,7 @@ class TimeSlotManager {
     }
     
     public function cleanExpiredReservations() {
-        $expiredReservations = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations WHERE expires_at < NOW()');
+        $expiredReservations = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations WHERE expires_at < NOW() AND is_confirmed = 0');
         foreach ($expiredReservations as $reservation) {
             Db::getInstance()->delete('pickupscheduler_time_slot_reservations', 'time_slot_id = ' . $reservation['time_slot_id']);
             Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'pickupscheduler_time_slots SET is_reserved = 0 WHERE id = ' . $reservation['time_slot_id']);

@@ -30,13 +30,13 @@ class pickupschedulergettimeslotsModuleFrontController extends ModuleFrontContro
             AND is_reserved = 0
         ');
 
-        // Si el client actual té un reservat que encara no ha expirat, el mostrem també
+        // Si el client actual té un reservat que encara no ha expirat i que encara no està confirmat, el mostrem també
         $customerId = $this->context->customer->id;
 
         $reservedTimeSlot = Db::getInstance()->getRow('
             SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots ts
             INNER JOIN ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations r ON ts.id = r.time_slot_id
-            WHERE ts.is_reserved = 1 AND r.customer_id = ' . (int)$customerId . '
+            WHERE ts.is_reserved = 1 AND r.customer_id = ' . (int)$customerId . '  AND r.is_confirmed = 0
         ');
 
         if ($reservedTimeSlot) {
