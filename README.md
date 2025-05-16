@@ -30,8 +30,4 @@ This module is ideal for stores that offer in-store pickup and need to manage ti
 If you need help or have questions about this module, you can contact `oskratch@gmail.com`.
 
 ## License
-This module is distributed under the **GNU General Public License v3.0 (GPLv3)**.
-
-It uses [FullCalendar v3.2](https://github.com/fullcalendar/fullcalendar/tree/v3.2.0), which is also licensed under GPLv3.
-
-See the [LICENSE](LICENSE) file for full license text.
+This plugin is licensed under the GPLv2 or later. See [LICENSE](LICENSE) for details.
