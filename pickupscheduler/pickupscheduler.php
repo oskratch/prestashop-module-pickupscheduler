@@ -44,7 +44,8 @@ class PickupScheduler extends Module {
         || !$this->registerHook('actionFrontControllerSetMedia')
         || !$this->registerHook('actionValidateOrderAfter')
         || !$this->registerHook('displayAdminOrder')
-        || !$this->registerHook('displayOrderDetail')) {
+        || !$this->registerHook('displayOrderDetail')
+        || !$this->registerHook('displayInvoice')) {
             return false;
         }
 
@@ -573,6 +574,41 @@ class PickupScheduler extends Module {
 
             return $this->display(__FILE__, 'views/templates/front/order_pickup_info_block.tpl');
         }
+    }
+
+    public function hookDisplayInvoice($params) {
+        $orderId = (int)$params['id_order'];
+        $order = new Order($orderId);
+        
+        // Només mostrar si és pickup delivery
+        if ($order->id_carrier == Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
+            $sql = 'SELECT tsr.*, ts.* FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations AS tsr
+                INNER JOIN ' . _DB_PREFIX_ . 'pickupscheduler_time_slots AS ts
+                ON tsr.time_slot_id = ts.id
+                WHERE tsr.order_id = ' . (int)$orderId . ' AND tsr.is_confirmed = 1';
+
+            $reservation = Db::getInstance()->getRow($sql);
+
+            if ($reservation) {
+                $date = new DateTime($reservation['date']);
+                $formattedDate = $date->format('d/m/Y');
+                
+                $pickupInfo = [
+                    'date' => $reservation['date'],
+                    'formatted_date' => $formattedDate,
+                    'start_time' => $reservation['start_time'],
+                    'end_time' => $reservation['end_time']
+                ];
+
+                $this->context->smarty->assign([
+                    'pickup_info' => $pickupInfo
+                ]);
+
+                return $this->display(__FILE__, 'views/templates/hook/invoice_pickup_info.tpl');
+            }
+        }
+        
+        return '';
     }
 
 }

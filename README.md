@@ -23,6 +23,20 @@ This module allows customers to select an available time slot and day to pick up
 2. Customize the available options according to your store's needs by accessing the module configuration from the Configure option in the module list.
 3. Under the Shipping menu in the backoffice, a new subsection called Pickup Scheduler will appear, where you can configure the time slots and other settings.
 
+## Show Pickup Information on PDF Invoice
+
+To display the pickup date and time on the PDF invoice, you need to override the `invoice.tpl` template in your theme (or child theme):
+
+1. Copy the original `invoice.tpl` from your main theme (usually located at `themes/your-theme/pdf/invoice.tpl`) to your child theme or custom theme if it does not already exist.
+2. Open the copied `invoice.tpl` file.
+3. After the shipping information block, add the following line:
+
+   ```smarty
+   {hook h='displayInvoice' id_order=$order->id}
+   ```
+
+   This will display the pickup date and time for orders with a scheduled pickup, using the Pickup Scheduler module.
+
 ## Notes
 This module is ideal for stores that offer in-store pickup and need to manage time slots and order preparation times effectively.
 
