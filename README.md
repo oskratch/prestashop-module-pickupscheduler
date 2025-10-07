@@ -1,47 +1,79 @@
 # Pickup Scheduler
-**Version:** 1.0.0  
-**Compatible with PrestaShop:** 1.7.x and 1.8.x  
 
-## Description
-This module allows customers to select an available time slot and day to pick up their order from the store. It can be associated with an already created carrier (e.g., Click and Collect) and configured to meet the store's specific needs.
+[![PrestaShop](https://img.shields.io/badge/PrestaShop-1.7.x%20%7C%201.8.x-blue)](https://www.prestashop.com/)
+[![PHP](https://img.shields.io/badge/PHP-7.2%2B-blue)](https://www.php.net/)
+[![License](https://img.shields.io/badge/License-GPL--2.0-green.svg)](LICENSE)
 
-## Main Features
-- **Carrier Association:** Associate the module with an existing carrier for pickup (e.g., Click and Collect).
-- **Order Preparation Time:** Define the number of days the store needs to prepare an order. Customers can only select pickup dates starting from this period, ensuring enough time for order preparation.
-- **Reservation Time:** Set the number of minutes the selected time slot is reserved before completing the order. If the customer exceeds this limit, the time slot will be released and available for other customers.
-- **Time Slot Configuration:** For each day, enable or disable the pickup option, set the start and end times, and configure the interval in minutes between each available time slot.
-- **Available Days Configuration:** Set the number of days for which time slots will always be available for pickup. This value ensures that time slots are generated automatically to maintain the indicated availability.
+## Overview
+A professional PrestaShop module that enables in-store pickup scheduling for customers. The module seamlessly integrates with existing carriers and provides flexible time slot management to optimize store operations and customer experience.
 
-## Installation
-1. Compress the module folder (`pickupscheduler/`) into a `.zip` file.
-2. Access the PrestaShop admin panel.
-3. Go to **Modules and Services** > **Upload a module**.
-4. Upload the `.zip` file and activate the module.
+**Perfect for businesses offering "Click & Collect" services.**
 
-## Configuration
-1. Once installed, access the module configuration from the admin panel.
-2. Customize the available options according to your store's needs by accessing the module configuration from the Configure option in the module list.
-3. Under the Shipping menu in the backoffice, a new subsection called Pickup Scheduler will appear, where you can configure the time slots and other settings.
+## ✨ Key Features
 
-## Show Pickup Information on PDF Invoice
+- 🚚 **Carrier Integration**: Seamlessly associate with existing carriers (Click & Collect, Store Pickup, etc.)
+- ⏰ **Smart Order Preparation**: Configure preparation time to ensure orders are ready for pickup
+- 🔒 **Time Slot Reservations**: Automatic reservation system with configurable timeout
+- 📅 **Flexible Scheduling**: Customize daily time slots with specific intervals and availability
+- 🔄 **Automated Management**: Auto-generate time slots to maintain consistent availability
+- 📄 **Invoice Integration**: Display pickup information directly on PDF invoices
 
-To display the pickup date and time on the PDF invoice, you need to override the `invoice.tpl` template in your theme (or child theme):
+## 🚀 Installation
 
-1. Copy the original `invoice.tpl` from your main theme (usually located at `themes/your-theme/pdf/invoice.tpl`) to your child theme or custom theme if it does not already exist.
-2. Open the copied `invoice.tpl` file.
-3. After the shipping information block, add the following line:
+### Step 1: Download & Upload
+1. Download or clone this repository
+2. Compress the `pickupscheduler/` folder into a `.zip` file
+3. Access your PrestaShop admin panel
+4. Navigate to **Modules and Services** → **Upload a module**
+5. Upload the `.zip` file and click **Install**
 
-   ```smarty
-   {hook h='displayInvoice' id_order=$order->id}
-   ```
+### Step 2: Activation
+After installation, the module will be automatically activated and ready for configuration.
 
-   This will display the pickup date and time for orders with a scheduled pickup, using the Pickup Scheduler module.
+## ⚙️ Configuration
 
-## Notes
-This module is ideal for stores that offer in-store pickup and need to manage time slots and order preparation times effectively.
+### Initial Setup
+1. Navigate to **Modules and Services** → **Pickup Scheduler** → **Configure**
+2. Configure your store's specific requirements and preferences
+3. Access advanced settings via **Shipping** → **Pickup Scheduler** in the backoffice
 
-## Support
-If you need help or have questions about this module, you can contact `oskratch@gmail.com`.
+### Key Configuration Options
+- **Preparation Time**: Set minimum days needed for order preparation
+- **Reservation Timeout**: Configure how long time slots are held during checkout
+- **Time Slot Intervals**: Define available pickup windows and durations
+- **Daily Availability**: Enable/disable pickup for specific days
+- **Carrier Association**: Link with your existing pickup/collect carriers
 
-## License
-This plugin is licensed under the GPLv2 or later. See [LICENSE](LICENSE) for details.
+## 📄 PDF Invoice Integration
+
+To display pickup information on PDF invoices, follow these steps:
+
+### Implementation Steps
+1. **Locate Template**: Find your theme's `invoice.tpl` file (usually at `themes/your-theme/pdf/invoice.tpl`)
+2. **Create Override**: Copy the template to your child theme if not already present
+3. **Add Hook**: Insert the following line after the shipping information block:
+
+```smarty
+{hook h='displayInvoice' id_order=$order->id}
+```
+
+This integration automatically displays pickup date and time for scheduled orders on all generated invoices.
+
+## 💼 Use Cases
+
+**Perfect for businesses that offer:**
+- Click & Collect services
+- In-store pickup options
+- Appointment-based collection
+- Scheduled order fulfillment
+- Time-sensitive product pickups
+
+## 📞 Support & Contact
+
+For technical support, feature requests, or questions:
+- **Email**: [oskratch@gmail.com](mailto:oskratch@gmail.com)
+- **Issues**: Use the [GitHub Issues](../../issues) page for bug reports
+
+## 📄 License
+
+This module is licensed under **GPL-2.0**. See the [LICENSE](LICENSE) file for full details.
