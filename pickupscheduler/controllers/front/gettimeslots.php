@@ -9,28 +9,41 @@ class pickupschedulergettimeslotsModuleFrontController extends ModuleFrontContro
 
         $timeSlotManager = new TimeSlotManager();
 
-        // eliminar tots els registres caducats
+        // delete all expired records
         $timeSlotManager->cleanExpiredTimeSlots();
 
-        // crear els registres corresponents (per omplir els seguents 7 dies)
+        // create the corresponding records (to fill the next 7 days)
         $timeSlotManager->generateTimeSlots();        
 
-        // netejo les reserves caducades
+        // clean expired reservations
         $timeSlotManager->cleanExpiredReservations();
         
-        // Mostro tots els slots disponibles tenint en compte els dies de preparació
+        // Show all available slots taking into account preparation days
         $preparationDays = (int)Configuration::get('PICKUP_SCHEDULER_PREPARATION_DAYS');
         $today = new DateTime();
         $today->setTime(0, 0, 0);
         $startDate = clone $today;
         $startDate->modify('+' . $preparationDays . ' days');
+        
+        // Check if the current day (with preparation days) has available slots
+        $currentAvailableSlots = Db::getInstance()->getValue('
+            SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots 
+            WHERE date = "' . $startDate->format('Y-m-d') . '" 
+            AND is_reserved = 0
+        ');
+        
+        // If there are no slots available for today, skip to the next day
+        if ($currentAvailableSlots == 0) {
+            $startDate->modify('+1 day');
+        }
+        
         $timeSlots = Db::getInstance()->executeS('
             SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots 
             WHERE date >= "' . $startDate->format('Y-m-d') . '" 
             AND is_reserved = 0
         ');
 
-        // Si el client actual té un reservat que encara no ha expirat i que encara no està confirmat, el mostrem també
+        // If the current customer has a reservation that hasn't expired and isn't confirmed yet, show it too
         $customerId = $this->context->customer->id;
 
         $reservedTimeSlot = Db::getInstance()->getRow('

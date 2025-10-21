@@ -56,7 +56,7 @@ class PickupScheduler extends Module {
 
         $sql = [];
 
-        // Crear la taula pickupscheduler_time_slots_config
+        // Create the pickupscheduler_time_slots_config table
         $sql[] = "
             CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "pickupscheduler_time_slots_config` (
                 `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -68,7 +68,7 @@ class PickupScheduler extends Module {
             ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;
         ";
 
-        // Crear la taula pickupscheduler_time_slots
+        // Create the pickupscheduler_time_slots table
         $sql[] = "
             CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "pickupscheduler_time_slots` (
                 `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,7 +81,7 @@ class PickupScheduler extends Module {
             ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;
         ";
 
-        // Crear la taula pickupscheduler_time_slot_reservations
+        // Create the pickupscheduler_time_slot_reservations table
         $sql[] = "
             CREATE TABLE IF NOT EXISTS `" . _DB_PREFIX_ . "pickupscheduler_time_slot_reservations` (
                 `time_slot_id` INT NOT NULL,
@@ -96,7 +96,7 @@ class PickupScheduler extends Module {
             ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;
         ";
 
-        // Executar les consultes SQL
+        // Execute SQL queries
         foreach ($sql as $query) {
             if (!Db::getInstance()->execute($query)) {
                 return false;
@@ -219,10 +219,10 @@ class PickupScheduler extends Module {
 
             $timeSlotManager = new TimeSlotManager();
 
-            // eliminar tots els registres que no estiguin reservats
+            // delete all records that are not reserved
             $timeSlotManager->cleanAllTimeSlots();
 
-            // crear els registres corresponents            
+            // create the corresponding records            
             $timeSlotManager->generateTimeSlots();
 
             $output = $this->displayConfirmation($this->l('La configuración de los tramos horarios se ha actualizado correctamente.'));
@@ -508,7 +508,7 @@ class PickupScheduler extends Module {
                     'order_id' => (int)$orderId
                 ], 'time_slot_id = ' . (int)$reservation['time_slot_id'] . ' AND customer_id = ' . (int)$customerId);
 
-                // enviar email de confirmación
+                // send confirmation email
                 
                 $timeSlot = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots WHERE id = ' . (int)$reservation['time_slot_id']);
 
@@ -580,7 +580,7 @@ class PickupScheduler extends Module {
         $orderId = (int)$params['id_order'];
         $order = new Order($orderId);
         
-        // Només mostrar si és pickup delivery
+        // Only show if it's pickup delivery
         if ($order->id_carrier == Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
             $sql = 'SELECT tsr.*, ts.* FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations AS tsr
                 INNER JOIN ' . _DB_PREFIX_ . 'pickupscheduler_time_slots AS ts
