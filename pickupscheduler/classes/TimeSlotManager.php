@@ -23,11 +23,12 @@ class TimeSlotManager {
 
             foreach ($timeSlotsConfig as $config) {
                 if ($config['day_of_week'] === $dayOfWeek) {
+                    $intervalMinutes = max((int)$config['interval_minutes'], 4); // Mínimo 4 minutos para evitar bucles infinitos
                     $startTime = new DateTime($currentDate->format('Y-m-d') . ' ' . $config['start_time']);
                     $endTime = new DateTime($currentDate->format('Y-m-d') . ' ' . $config['end_time']);
                     while ($startTime < $endTime) {
                         $nextTime = clone $startTime;
-                        $nextTime->modify('+' . $config['interval_minutes'] . ' minutes');
+                        $nextTime->modify('+' . $intervalMinutes . ' minutes');
                         if ($nextTime <= $endTime && ($currentDate->format('Y-m-d') !== date('Y-m-d') || $nextTime >= new DateTime('now'))) {
                             $existingSlot = Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots WHERE date = "' . $currentDate->format('Y-m-d') . '" AND start_time = "' . $startTime->format('H:i:s') . '" AND end_time = "' . $nextTime->format('H:i:s') . '"');
                             if (!$existingSlot) {

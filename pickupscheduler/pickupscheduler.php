@@ -188,7 +188,7 @@ class PickupScheduler extends Module {
                 $active = (int)Tools::getValue('PICKUP_SCHEDULER_' . strtoupper($day) . '_ACTIVE');
                 $startTime = Tools::getValue('PICKUP_SCHEDULER_' . strtoupper($day) . '_START_TIME');
                 $endTime = Tools::getValue('PICKUP_SCHEDULER_' . strtoupper($day) . '_END_TIME');
-                $intervalMinutes = (int)Tools::getValue('PICKUP_SCHEDULER_' . strtoupper($day) . '_INTERVAL_MINUTES');
+                $intervalMinutes = max((int)Tools::getValue('PICKUP_SCHEDULER_' . strtoupper($day) . '_INTERVAL_MINUTES'), 4); // Mínimo 4 minutos
 
                 $config = array_filter($timeSlotsConfig, function($slot) use ($day) {
                     return $slot['day_of_week'] === $day;
