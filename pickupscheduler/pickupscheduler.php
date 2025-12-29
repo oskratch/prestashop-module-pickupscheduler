@@ -229,7 +229,7 @@ class PickupScheduler extends Module {
         }
 
         if(Tools::isSubmit('PICKUP_SCHEDULER_AVAILABLE_DAYS') && Tools::getValue('PICKUP_SCHEDULER_AVAILABLE_DAYS') !== null){
-            $availableDays = (int)Tools::getValue('PICKUP_SCHEDULER_AVAILABLE_DAYS');
+            $availableDays = min((int)Tools::getValue('PICKUP_SCHEDULER_AVAILABLE_DAYS'), 10); // Máximo 10 días
             Configuration::updateValue('PICKUP_SCHEDULER_AVAILABLE_DAYS', $availableDays);
             $output = $this->displayConfirmation($this->l('La configuración de los días disponibles se ha actualizado correctamente.'));
         }
@@ -425,7 +425,7 @@ class PickupScheduler extends Module {
                 'input' => [
                     [
                         'type' => 'text',
-                        'label' => $this->l('Número de días'),
+                        'label' => $this->l('Número de días (máximo 10)'),
                         'name' => 'PICKUP_SCHEDULER_AVAILABLE_DAYS',
                         'required' => true,
                     ],

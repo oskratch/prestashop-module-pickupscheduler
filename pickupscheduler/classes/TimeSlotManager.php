@@ -15,7 +15,7 @@ class TimeSlotManager {
         $today = new DateTime();
         $today->setTime(0, 0, 0);
         
-        $availableDays = (int)Configuration::get('PICKUP_SCHEDULER_AVAILABLE_DAYS');
+        $availableDays = min((int)Configuration::get('PICKUP_SCHEDULER_AVAILABLE_DAYS'), 10); // Máximo 10 días para prevenir problemas de memoria
         for ($i = 0; $i < $availableDays; $i++) {
             $currentDate = clone $today;
             $currentDate->modify('+' . $i . ' days');
