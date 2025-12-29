@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/v1.1.1...v1.1.2) (2025-12-29)
+
+
+### Bug Fixes
+
+* enforce minimum 4-minute interval to prevent infinite loops ([e6b1bf8](https://github.com/oskratch/prestashop-module-pickupscheduler/commit/e6b1bf879cb272a14afec93bf684b01df10fcf7b))
+
 ## [1.1.1](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/v1.1.0...v1.1.1) (2025-12-29)
 
 
