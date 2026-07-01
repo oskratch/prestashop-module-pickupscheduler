@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.3](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/v1.1.2...v1.1.3) (2026-07-01)
+
+
+### Bug Fixes
+
+* harden pickup scheduling against IDOR, stale slots and PHP 8.3 issues ([de50147](https://github.com/oskratch/prestashop-module-pickupscheduler/commit/de5014777ed7ef53b7cec6faeab6ad8c98de21ca))
+* restore required release-type input for release-please-action ([1c49a63](https://github.com/oskratch/prestashop-module-pickupscheduler/commit/1c49a63b06d5d87d63041bc11e25dbd08b5009ac))
+
+
+### Miscellaneous Chores
+
+* sync module version files via release-please and ignore CLAUDE.md ([22103e0](https://github.com/oskratch/prestashop-module-pickupscheduler/commit/22103e0cec657dbda5799be7b49dfae2deaa2700))
+
 ## [1.1.2](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/v1.1.1...v1.1.2) (2025-12-29)
 
 
