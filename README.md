@@ -1,6 +1,6 @@
 # Pickup Scheduler
 
-[![PrestaShop](https://img.shields.io/badge/PrestaShop-1.7.x%20%7C%201.8.x-blue)](https://www.prestashop.com/)
+[![PrestaShop](https://img.shields.io/badge/PrestaShop-1.7.x%20%7C%208.x-blue)](https://www.prestashop.com/)
 [![PHP](https://img.shields.io/badge/PHP-7.2%2B-blue)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0-green.svg)](LICENSE)
 
@@ -35,14 +35,14 @@ After installation, the module will be automatically activated and ready for con
 ### Initial Setup
 1. Navigate to **Modules and Services** → **Pickup Scheduler** → **Configure**
 2. Configure your store's specific requirements and preferences
-3. Access advanced settings via **Shipping** → **Pickup Scheduler** in the backoffice
+3. Review confirmed pickups anytime under **Orders** → **Recogidas en tienda** in the backoffice
 
 ### Key Configuration Options
+- **Carrier Association**: Link with your existing pickup/collect carrier
 - **Preparation Time**: Set minimum days needed for order preparation
 - **Reservation Timeout**: Configure how long time slots are held during checkout
-- **Time Slot Intervals**: Define available pickup windows and durations
-- **Daily Availability**: Enable/disable pickup for specific days
-- **Carrier Association**: Link with your existing pickup/collect carriers
+- **Daily Availability & Time Slot Intervals**: Enable/disable pickup per weekday and define its opening hours and slot duration (minimum 4 minutes)
+- **Available Days Window**: Set how many days ahead (up to 10) always have time slots ready to book
 
 ## 📄 PDF Invoice Integration
 
