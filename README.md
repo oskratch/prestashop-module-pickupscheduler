@@ -1,6 +1,6 @@
 # Pickup Scheduler
 
-[![PrestaShop](https://img.shields.io/badge/PrestaShop-1.7.x%20%7C%208.x-blue)](https://www.prestashop.com/)
+[![PrestaShop](https://img.shields.io/badge/PrestaShop-1.7.x%20%7C%208.x%20%7C%209.x-blue)](https://www.prestashop.com/)
 [![PHP](https://img.shields.io/badge/PHP-7.2%2B-blue)](https://www.php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0-green.svg)](LICENSE)
 
