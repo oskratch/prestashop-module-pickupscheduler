@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/pickupscheduler-v1.2.0...pickupscheduler-v1.2.1) (2026-07-01)
+
+
+### Bug Fixes
+
+* declare compatibility with PrestaShop 9 ([093a948](https://github.com/oskratch/prestashop-module-pickupscheduler/commit/093a948feabcef09fc768ac93e6dbaa5756af1ed))
+
 ## [1.2.0](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/pickupscheduler-v1.1.3...pickupscheduler-v1.2.0) (2026-07-01)
 
 
