@@ -21,7 +21,7 @@ class PickupScheduler extends Module {
     public function __construct(){
         $this->name = 'pickupscheduler';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.1.3'; // x-release-please-version
+        $this->version = '1.2.0'; // x-release-please-version
         $this->author = 'Oscar Periche - 4funkies';
         $this->need_instance = 0;
         
