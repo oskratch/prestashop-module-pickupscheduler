@@ -1,0 +1,13 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "php",
+  "packages": {
+    ".": {
+      "package-name": "pickupscheduler",
+      "extra-files": [
+        "pickupscheduler/pickupscheduler.php",
+        "pickupscheduler/config.xml"
+      ]
+    }
+  }
+}

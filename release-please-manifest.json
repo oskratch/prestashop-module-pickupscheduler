@@ -1,5 +1,3 @@
 {
-  "pickupscheduler/pickupscheduler.php": {
-    "release-type": "php"
-  }
+  ".": "1.1.2"
 }
