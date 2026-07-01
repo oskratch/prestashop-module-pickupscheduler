@@ -13,7 +13,7 @@ class pickupschedulergettimeslotsModuleFrontController extends ModuleFrontContro
         $timeSlotManager->cleanExpiredTimeSlots();
 
         // create the corresponding records (to fill the next 7 days)
-        $timeSlotManager->generateTimeSlots();        
+        TimeSlotManager::generateTimeSlots();
 
         // clean expired reservations
         $timeSlotManager->cleanExpiredReservations();
@@ -25,22 +25,28 @@ class pickupschedulergettimeslotsModuleFrontController extends ModuleFrontContro
         $startDate = clone $today;
         $startDate->modify('+' . $preparationDays . ' days');
         
-        // Check if the current day (with preparation days) has available slots
+        $now = new DateTime();
+        $todayStr = $now->format('Y-m-d');
+        $nowTimeStr = $now->format('H:i:s');
+
+        // Check if the current day (with preparation days) has available slots that haven't started yet
         $currentAvailableSlots = Db::getInstance()->getValue('
-            SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots 
-            WHERE date = "' . $startDate->format('Y-m-d') . '" 
+            SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots
+            WHERE date = "' . $startDate->format('Y-m-d') . '"
             AND is_reserved = 0
+            AND (date != "' . $todayStr . '" OR start_time >= "' . $nowTimeStr . '")
         ');
-        
+
         // If there are no slots available for today, skip to the next day
         if ($currentAvailableSlots == 0) {
             $startDate->modify('+1 day');
         }
-        
+
         $timeSlots = Db::getInstance()->executeS('
-            SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots 
-            WHERE date >= "' . $startDate->format('Y-m-d') . '" 
+            SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots
+            WHERE date >= "' . $startDate->format('Y-m-d') . '"
             AND is_reserved = 0
+            AND (date != "' . $todayStr . '" OR start_time >= "' . $nowTimeStr . '")
         ');
 
         // If the current customer has a reservation that hasn't expired and isn't confirmed yet, show it too

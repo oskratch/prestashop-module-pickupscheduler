@@ -21,7 +21,7 @@ class PickupScheduler extends Module {
     public function __construct(){
         $this->name = 'pickupscheduler';
         $this->tab = 'shipping_logistics';
-        $this->version = '1.0.0';
+        $this->version = '1.1.2'; // x-release-please-version
         $this->author = 'Oscar Periche - 4funkies';
         $this->need_instance = 0;
         
@@ -148,7 +148,7 @@ class PickupScheduler extends Module {
     }  
 
     public function uninstallTab() {
-        $tabId = (int) Tab::getIdFromClassName('AdminPickupOrdersController');
+        $tabId = (int) Tab::getIdFromClassName('AdminPickupOrders');
 
         if ($tabId) {
             $tab = new Tab($tabId);
@@ -169,13 +169,13 @@ class PickupScheduler extends Module {
         }
 
         if(Tools::isSubmit('PICKUP_SCHEDULER_PREPARATION_DAYS') && Tools::getValue('PICKUP_SCHEDULER_PREPARATION_DAYS') !== null){
-            $preparationDays = (int)Tools::getValue('PICKUP_SCHEDULER_PREPARATION_DAYS');
+            $preparationDays = max((int)Tools::getValue('PICKUP_SCHEDULER_PREPARATION_DAYS'), 0);
             Configuration::updateValue('PICKUP_SCHEDULER_PREPARATION_DAYS', $preparationDays);
             $output = $this->displayConfirmation($this->l('La configuración del tiempo de preparación se ha actualizado correctamente.'));
         }
 
         if(Tools::isSubmit('PICKUP_SCHEDULER_RESERVATION_MINUTES') && Tools::getValue('PICKUP_SCHEDULER_RESERVATION_MINUTES') !== null){
-            $reservationMinutes = (int)Tools::getValue('PICKUP_SCHEDULER_RESERVATION_MINUTES');
+            $reservationMinutes = max((int)Tools::getValue('PICKUP_SCHEDULER_RESERVATION_MINUTES'), 1);
             Configuration::updateValue('PICKUP_SCHEDULER_RESERVATION_MINUTES', $reservationMinutes);
             $output = $this->displayConfirmation($this->l('La configuración de los tramos horarios se ha actualizado correctamente.'));
         }
@@ -222,14 +222,14 @@ class PickupScheduler extends Module {
             // delete all records that are not reserved
             $timeSlotManager->cleanAllTimeSlots();
 
-            // create the corresponding records            
-            $timeSlotManager->generateTimeSlots();
+            // create the corresponding records
+            TimeSlotManager::generateTimeSlots();
 
             $output = $this->displayConfirmation($this->l('La configuración de los tramos horarios se ha actualizado correctamente.'));
         }
 
         if(Tools::isSubmit('PICKUP_SCHEDULER_AVAILABLE_DAYS') && Tools::getValue('PICKUP_SCHEDULER_AVAILABLE_DAYS') !== null){
-            $availableDays = min((int)Tools::getValue('PICKUP_SCHEDULER_AVAILABLE_DAYS'), 10); // Máximo 10 días
+            $availableDays = max(min((int)Tools::getValue('PICKUP_SCHEDULER_AVAILABLE_DAYS'), 10), 1); // Entre 1 y 10 días
             Configuration::updateValue('PICKUP_SCHEDULER_AVAILABLE_DAYS', $availableDays);
             $output = $this->displayConfirmation($this->l('La configuración de los días disponibles se ha actualizado correctamente.'));
         }
@@ -460,7 +460,9 @@ class PickupScheduler extends Module {
             'minInterval' => Db::getInstance()->getValue('SELECT MIN(interval_minutes) FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots_config'),
             'customer_id' => $this->context->customer->id,
             'pickup_scheduler_preparation_days' => Configuration::get('PICKUP_SCHEDULER_PREPARATION_DAYS') . ' ' . (Configuration::get('PICKUP_SCHEDULER_PREPARATION_DAYS') == 1 ? 'día' : 'días'),
-            'pickup_scheduler_reservation_minutes' => Configuration::get('PICKUP_SCHEDULER_RESERVATION_MINUTES')
+            'pickup_scheduler_reservation_minutes' => Configuration::get('PICKUP_SCHEDULER_RESERVATION_MINUTES'),
+            'get_time_slots_url' => $this->context->link->getModuleLink('pickupscheduler', 'gettimeslots'),
+            'confirm_time_slot_url' => $this->context->link->getModuleLink('pickupscheduler', 'confirmtimeslot'),
         ];
 
         $timeSlotManager = new TimeSlotManager();
@@ -489,11 +491,20 @@ class PickupScheduler extends Module {
         }
     }
 
+    private function formatPickupDateEs($date) {
+        $diasSemana = [1 => 'Lunes', 2 => 'Martes', 3 => 'Miércoles', 4 => 'Jueves', 5 => 'Viernes', 6 => 'Sábado', 7 => 'Domingo'];
+        $meses = [1 => 'enero', 2 => 'febrero', 3 => 'marzo', 4 => 'abril', 5 => 'mayo', 6 => 'junio', 7 => 'julio', 8 => 'agosto', 9 => 'septiembre', 10 => 'octubre', 11 => 'noviembre', 12 => 'diciembre'];
+
+        $dateTime = new DateTime($date);
+
+        return $diasSemana[(int)$dateTime->format('N')] . ', ' . $dateTime->format('d') . ' de ' . $meses[(int)$dateTime->format('n')] . ' de ' . $dateTime->format('Y');
+    }
+
     public function hookActionValidateOrderAfter($params) {
         $order = $params['order'];
-        $carrierId = $order->id_carrier;
+        $carrierId = (int)$order->id_carrier;
 
-        if ($carrierId == Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
+        if ($carrierId === (int)Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
             $customerId = $order->id_customer;
             $orderId = $order->id;
 
@@ -513,7 +524,7 @@ class PickupScheduler extends Module {
                 $timeSlot = Db::getInstance()->getRow('SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slots WHERE id = ' . (int)$reservation['time_slot_id']);
 
                 $templateVars = [
-                    '{date}' => ucfirst(strftime('%A, %d de %B de %Y', strtotime($timeSlot['date']))),
+                    '{date}' => $this->formatPickupDateEs($timeSlot['date']),
                     '{start_time}' => $timeSlot['start_time'],
                     '{end_time}' => $timeSlot['end_time'],
                     '{order_id}' => (int)$orderId,
@@ -540,7 +551,7 @@ class PickupScheduler extends Module {
         $orderId = (int)$params['id_order'];
         $order = new Order($orderId);
         
-        if ($order->id_carrier == Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
+        if ((int)$order->id_carrier === (int)Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
             $sql = 'SELECT tsr.*, ts.* FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations AS tsr
                 INNER JOIN ' . _DB_PREFIX_ . 'pickupscheduler_time_slots AS ts
                 ON tsr.time_slot_id = ts.id
@@ -560,7 +571,7 @@ class PickupScheduler extends Module {
         $orderId = (int)$params['order']->id;
         $order = new Order($orderId);
 
-        if ($order->id_carrier == Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
+        if ((int)$order->id_carrier === (int)Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
             $sql = 'SELECT tsr.*, ts.* FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations AS tsr
                 INNER JOIN ' . _DB_PREFIX_ . 'pickupscheduler_time_slots AS ts
                 ON tsr.time_slot_id = ts.id
@@ -581,7 +592,7 @@ class PickupScheduler extends Module {
         $order = new Order($orderId);
         
         // Only show if it's pickup delivery
-        if ($order->id_carrier == Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
+        if ((int)$order->id_carrier === (int)Configuration::get('PICKUP_SCHEDULER_CARRIER_ID')) {
             $sql = 'SELECT tsr.*, ts.* FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations AS tsr
                 INNER JOIN ' . _DB_PREFIX_ . 'pickupscheduler_time_slots AS ts
                 ON tsr.time_slot_id = ts.id

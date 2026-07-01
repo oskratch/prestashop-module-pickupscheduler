@@ -4,7 +4,8 @@ weekends = weekends === '1';
 var minTime = window.minTime;
 var maxTime = window.maxTime;
 var minInterval = window.minInterval;
-var customer_id = window.customer_id;
+var getTimeSlotsUrl = window.getTimeSlotsUrl;
+var confirmTimeSlotUrl = window.confirmTimeSlotUrl;
 var autoSelectEventId = window.autoSelectEventId;
 var autoSelectEventDate = autoSelectEventDate;
 var autoSelectEventExpires = window.autoSelectEventExpires;
@@ -51,7 +52,7 @@ $(function() {
         slotDuration: minInterval,
         events: function(start, end, timezone, callback) {
             $.ajax({
-                url: '/index.php?fc=module&module=pickupscheduler&controller=gettimeslots',
+                url: getTimeSlotsUrl,
                 dataType: 'json',
                 success: function(data) {
                     var events = [];
@@ -88,9 +89,8 @@ $(function() {
             selectedEvent = this;
             $(this).addClass('event-selected');
 
-            $.post('/index.php?fc=module&module=pickupscheduler&controller=confirmtimeslot', {
-                event_id: event.id,
-                customer_id: customer_id
+            $.post(confirmTimeSlotUrl, {
+                event_id: event.id
             }).done(function(response) {
                 var result = JSON.parse(response);
                 if (result.success) {

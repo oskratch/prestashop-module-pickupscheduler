@@ -12,8 +12,9 @@
         return (hours < 10 ? '0' : '') + hours + ':' + (mins < 10 ? '0' : '') + mins;
     };
     window.minInterval = window.formatMinutes('{$minInterval}');
-    
-    window.customer_id = {$customer_id};
+
+    window.getTimeSlotsUrl = '{$get_time_slots_url}';
+    window.confirmTimeSlotUrl = '{$confirm_time_slot_url}';
 
     {if $calendar_event_id_selected}
     window.autoSelectEventId = {$calendar_event_id_selected};

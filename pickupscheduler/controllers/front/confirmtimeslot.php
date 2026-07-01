@@ -3,7 +3,7 @@ class pickupschedulerconfirmtimeslotModuleFrontController extends ModuleFrontCon
    
     public function postProcess() {
         $event_id = Tools::getValue('event_id');
-        $customer_id = Tools::getValue('customer_id');
+        $customer_id = (int)$this->context->customer->id;
 
         $time_slot = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'pickupscheduler_time_slots WHERE id = '.(int)$event_id);
         
