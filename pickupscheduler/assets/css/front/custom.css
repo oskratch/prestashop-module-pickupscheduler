@@ -2,7 +2,7 @@
     margin-top: 20px;
 }
 
-.page-order table td, .page-order table th {
+.page-order #calendar table td, .page-order #calendar table th {
     padding: 0;
 }
 
