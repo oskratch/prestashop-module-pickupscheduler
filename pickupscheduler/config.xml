@@ -14,7 +14,7 @@
 
     <ps_versions_compliancy>
 
-        <min>8.2</min>
+        <min>1.7</min>
 
         <max>9.99.99</max>
 
