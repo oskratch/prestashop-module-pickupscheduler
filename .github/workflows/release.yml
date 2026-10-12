@@ -1,0 +1,37 @@
+name: Release
+
+# When a release is published on GitHub, build the installable module zip and attach it to the release.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check that the tag matches the module version
+        run: |
+          TAG_VERSION="${TAG#v}"
+          CLASS_VERSION=$(grep -oP "\\$this->version = '\K[^']+" pickupscheduler/pickupscheduler.php)
+          XML_VERSION=$(grep -oP '<version>\K[^<]+' pickupscheduler/config.xml)
+          echo "Tag: $TAG_VERSION / pickupscheduler.php: $CLASS_VERSION / config.xml: $XML_VERSION"
+          if [ "$TAG_VERSION" != "$CLASS_VERSION" ] || [ "$TAG_VERSION" != "$XML_VERSION" ]; then
+            echo "::error::The tag version must match \$this->version in pickupscheduler/pickupscheduler.php and <version> in pickupscheduler/config.xml"
+            exit 1
+          fi
+
+      # PrestaShop expects the zip to contain the module folder itself (pickupscheduler/...).
+      - name: Build the module zip
+        run: zip -r pickupscheduler.zip pickupscheduler -x '*.DS_Store'
+
+      - name: Attach the zip to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$TAG" pickupscheduler.zip --clobber
