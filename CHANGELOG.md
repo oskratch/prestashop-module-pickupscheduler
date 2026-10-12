@@ -1,5 +1,40 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## [1.3.0](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/pickupscheduler-v1.2.1...v1.3.0) (2026-10-12)
+
+
+### Features
+
+* redesigned configuration page: a single form with status cards (upcoming pickups, active days, free slots), a weekly schedule with on/off switches and a live preview of the slots per day, and validation of every field before saving
+* the "Store pickups" list can switch between upcoming pickups (soonest first) and the full history, and shows the customer's email, order reference and coloured order status
+* the order confirmation email is sent to the order's customer in the order's language when a template exists for it (Spanish otherwise)
+
+
+### Bug Fixes
+
+* booking a slot crashed on PrestaShop 9 (`ajaxDie()` no longer exists)
+* the pickup calendar never appeared with the Hummingbird theme (PrestaShop 9's default); the checkout script now works with Classic and Hummingbird
+* editing the pickup carrier in PrestaShop (which gives it a new id) broke the checkout calendar and hid the pickup info of older orders; carriers are now matched by reference
+* two customers could book the same slot at the same time; the slot is now claimed atomically
+* anonymous requests or unknown slot ids could leave slots blocked forever; booking now requires a customer and the shop token, and the upgrade releases slots already blocked this way
+* customers could book slots inside the preparation period or already started by calling the endpoint directly
+* clicking the slot you already hold said it had been taken by another customer
+* after choosing a second slot, the "Confirm" button could use the first slot's expiry time and wrongly report it as expired
+* the expiry countdown depended on the customer's clock and time zone, and failed on Safari
+* expired reservations were compared with MySQL's clock instead of PHP's, releasing them early or late when the two time zones differ
+* order pages showed PHP warnings when a pickup order had no slot
+* the calendar's table styles also removed the padding of every other table on the checkout page
+* the page no longer jumps to the selected slot every time the calendar is redrawn
+
+
+### Miscellaneous Chores
+
+* release zip is built and attached automatically by GitHub Actions; PHP syntax is checked on every push
+* `index.php` guards in every folder, as PrestaShop requires
+* versions are now managed manually (release-please removed)
+
 ## [1.2.1](https://github.com/oskratch/prestashop-module-pickupscheduler/compare/pickupscheduler-v1.2.0...pickupscheduler-v1.2.1) (2026-07-01)
 
 
