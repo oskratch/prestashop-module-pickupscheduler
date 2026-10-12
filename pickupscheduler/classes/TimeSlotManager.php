@@ -1,5 +1,9 @@
 <?php
 
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
+
 class TimeSlotManager {
 
     public function cleanAllTimeSlots() {
@@ -64,10 +68,12 @@ class TimeSlotManager {
     }
     
     public function cleanExpiredReservations() {
-        $expiredReservations = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations WHERE expires_at < NOW() AND is_confirmed = 0');
+        // expires_at is written with PHP's clock, so compare against PHP's clock too
+        // (MySQL's NOW() may run on a different time zone).
+        $expiredReservations = Db::getInstance()->executeS('SELECT * FROM ' . _DB_PREFIX_ . 'pickupscheduler_time_slot_reservations WHERE expires_at < "' . date('Y-m-d H:i:s') . '" AND is_confirmed = 0');
         foreach ($expiredReservations as $reservation) {
-            Db::getInstance()->delete('pickupscheduler_time_slot_reservations', 'time_slot_id = ' . $reservation['time_slot_id']);
-            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'pickupscheduler_time_slots SET is_reserved = 0 WHERE id = ' . $reservation['time_slot_id']);
+            Db::getInstance()->delete('pickupscheduler_time_slot_reservations', 'time_slot_id = ' . (int)$reservation['time_slot_id'] . ' AND is_confirmed = 0');
+            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'pickupscheduler_time_slots SET is_reserved = 0 WHERE id = ' . (int)$reservation['time_slot_id']);
         }
     }
 
