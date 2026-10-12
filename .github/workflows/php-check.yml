@@ -18,7 +18,7 @@ jobs:
         php: ["7.2", "7.4", "8.1", "8.3", "8.4"]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check PHP syntax
         run: find pickupscheduler -name "*.php" -print0 | xargs -0 -n1 php -l
