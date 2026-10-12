@@ -19,7 +19,7 @@ jobs:
       - name: Check that the tag matches the module version
         run: |
           TAG_VERSION="${TAG#v}"
-          CLASS_VERSION=$(grep -oP "\\$this->version = '\K[^']+" pickupscheduler/pickupscheduler.php)
+          CLASS_VERSION=$(grep -oP "this->version = '\K[^']+" pickupscheduler/pickupscheduler.php)
           XML_VERSION=$(grep -oP '<version>\K[^<]+' pickupscheduler/config.xml)
           echo "Tag: $TAG_VERSION / pickupscheduler.php: $CLASS_VERSION / config.xml: $XML_VERSION"
           if [ "$TAG_VERSION" != "$CLASS_VERSION" ] || [ "$TAG_VERSION" != "$XML_VERSION" ]; then
