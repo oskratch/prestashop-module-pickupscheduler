@@ -10,18 +10,15 @@ jobs:
   php-syntax:
     runs-on: ubuntu-latest
     name: PHP ${{ matrix.php }} syntax check
+    # Official PHP images, so no third-party setup action is needed
+    # (this repository only allows GitHub-owned actions).
+    container: php:${{ matrix.php }}-cli
     strategy:
       matrix:
         php: ["7.2", "7.4", "8.1", "8.3", "8.4"]
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          tools: none
 
       - name: Check PHP syntax
         run: find pickupscheduler -name "*.php" -print0 | xargs -0 -n1 php -l
